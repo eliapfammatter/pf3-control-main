@@ -1,0 +1,12 @@
+casadi
+do_mpc
+FMPy
+matplotlib
+npTDMS
+numba
+numpy
+plotly
+scipy
+sympy
+cryptography
+pyOpenSSL

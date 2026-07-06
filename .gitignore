@@ -1,0 +1,27 @@
+.claude/
+docs/
+data/
+output/
+plots/
+data-mock/
+venv/
+__pycache__/
+
+start-script.sh
+
+experiment-series/
+experiment-series.tar
+
+# CasADi JIT compilation
+.casadi_jit/
+jit_tmp*.c
+tmp_casadi_compiler_shell*
+
+nlp_*.c
+nlp_*.so
+
+matlab-scripts/
+*.prof
+
+src/triinterp/.cache/
+sysid_plots/
