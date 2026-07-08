@@ -20,7 +20,7 @@ from fmpy.fmi2 import FMU2Slave
 
 # Make the generated zero-shot module importable.
 sys.path.insert(0, str(Path("generated/zero_shot").resolve()))
-from data_types import ModelInputs, ModelOutputs  # noqa: E402
+from src.generated.zero_shot.data_types import ModelInputs, ModelOutputs  
 
 FMU_PATH = Path("data/pf3/PF3_FMI.fmu")
 

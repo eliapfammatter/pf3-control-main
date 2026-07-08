@@ -14,7 +14,7 @@ from typing import Any, Protocol
 
 import numpy as np
 
-from data_types import Artefact, ModelInputs, ModelOutputs, ModelState
+from .data_types import Artefact, ModelInputs, ModelOutputs, ModelState
 
 
 class Plant(Protocol):
