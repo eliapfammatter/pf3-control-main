@@ -1,0 +1,64 @@
+{
+  "target": "src/generated/constraint_based/data_types.py",
+  "num_files": 1,
+  "modules": {
+    "src/generated/constraint_based/data_types.py": {
+      "mean_cc": 1.5,
+      "max_cc": 3,
+      "num_blocks": 8,
+      "halstead_volume": 25.27,
+      "lloc": 70,
+      "sloc": 41,
+      "comment_ratio": 0.098
+    }
+  },
+  "pylint": {
+    "score": 9.71,
+    "violations": {
+      "missing-final-newline": 1
+    }
+  },
+  "checks": [
+    {
+      "metric": "mean_cc",
+      "scope": "src/generated/constraint_based/data_types.py",
+      "value": 1.5,
+      "limit": 5.0,
+      "kind": "fail",
+      "passed": true
+    },
+    {
+      "metric": "max_cc",
+      "scope": "src/generated/constraint_based/data_types.py",
+      "value": 3,
+      "limit": 10.0,
+      "kind": "fail",
+      "passed": true
+    },
+    {
+      "metric": "halstead_volume",
+      "scope": "src/generated/constraint_based/data_types.py",
+      "value": 25.27,
+      "limit": 8000.0,
+      "kind": "warn",
+      "passed": true
+    },
+    {
+      "metric": "lloc",
+      "scope": "src/generated/constraint_based/data_types.py",
+      "value": 70,
+      "limit": 500.0,
+      "kind": "warn",
+      "passed": true
+    },
+    {
+      "metric": "pylint_score",
+      "scope": "project",
+      "value": 9.71,
+      "limit": 7.0,
+      "kind": "fail",
+      "passed": true
+    }
+  ],
+  "passed": true
+}
