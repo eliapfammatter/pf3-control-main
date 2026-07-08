@@ -1,5 +1,5 @@
 import numpy as np
-from data_types import ModelInputs, TrajectorySet, Trajectory
+from generated.constraint_based.data_types import ModelInputs, TrajectorySet, Trajectory
 from fpoints_controller import FPointsController
 
 

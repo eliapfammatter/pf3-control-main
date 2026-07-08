@@ -1,5 +1,5 @@
 import numpy as np
-from data_types import ModelInputs, ModelOutputs, ModelState, Trajectory, TrajectorySet, Artefact
+from generated.constraint_based.data_types import ModelInputs, ModelOutputs, ModelState, Trajectory, TrajectorySet, Artefact
 
 
 def test_model_inputs():
