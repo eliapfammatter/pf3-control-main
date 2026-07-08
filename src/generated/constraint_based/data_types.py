@@ -10,6 +10,12 @@ All fields use SI units unless noted otherwise.
 
 from __future__ import annotations
 
+# Dataclass fields below (y_T, N_T, N_P, H_T, Q_T, H_P1, H_P2, H_ref) use
+# domain-standard turbine/pump notation mandated by the module contract
+# rather than PEP 8 snake_case; the module-wide suppression avoids
+# repeating this justification on every affected class/field.
+# pylint: disable=invalid-name
+
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -20,7 +26,6 @@ LINEAR_INTERP_MIN_POINTS = 1
 
 @dataclass
 class ModelInputs:
-    # pylint: disable=invalid-name
     """Inputs applied to the plant model at a given simulation step.
 
     Parameters
@@ -46,7 +51,6 @@ class ModelInputs:
 
 @dataclass
 class ModelOutputs:
-    # pylint: disable=invalid-name
     """Outputs produced by the plant model at a given simulation step.
 
     Parameters
@@ -134,7 +138,6 @@ class Trajectory:
 
 @dataclass
 class TrajectorySet:
-    # pylint: disable=invalid-name
     """A bundle of reference trajectories for a simulation run.
 
     Parameters
