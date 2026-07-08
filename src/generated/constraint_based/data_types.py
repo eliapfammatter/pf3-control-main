@@ -20,6 +20,7 @@ LINEAR_INTERP_MIN_POINTS = 1
 
 @dataclass
 class ModelInputs:
+    # pylint: disable=invalid-name
     """Inputs applied to the plant model at a given simulation step.
 
     Parameters
@@ -30,6 +31,12 @@ class ModelInputs:
         Turbine rotational speed [rpm].
     N_P : float
         Pump rotational speed [rpm].
+
+    Notes
+    -----
+    Field names follow the domain-standard turbine/pump notation
+    (``y_T``, ``N_T``, ``N_P``) mandated by the module contract rather
+    than PEP 8 snake_case, hence the local ``invalid-name`` suppression.
     """
 
     y_T: float
@@ -39,6 +46,7 @@ class ModelInputs:
 
 @dataclass
 class ModelOutputs:
+    # pylint: disable=invalid-name
     """Outputs produced by the plant model at a given simulation step.
 
     Parameters
@@ -51,6 +59,13 @@ class ModelOutputs:
         Pump 1 head [m].
     H_P2 : float
         Pump 2 head [m].
+
+    Notes
+    -----
+    Field names follow the domain-standard turbine/pump notation
+    (``H_T``, ``Q_T``, ``H_P1``, ``H_P2``) mandated by the module
+    contract rather than PEP 8 snake_case, hence the local
+    ``invalid-name`` suppression.
     """
 
     H_T: float
@@ -119,6 +134,7 @@ class Trajectory:
 
 @dataclass
 class TrajectorySet:
+    # pylint: disable=invalid-name
     """A bundle of reference trajectories for a simulation run.
 
     Parameters
@@ -131,6 +147,13 @@ class TrajectorySet:
         Reference head trajectory [m].
     N_P : Trajectory | None, optional
         Pump speed reference trajectory [rpm], by default None.
+
+    Notes
+    -----
+    Field names follow the domain-standard turbine/pump notation
+    (``y_T``, ``N_T``, ``H_ref``, ``N_P``) mandated by the module
+    contract rather than PEP 8 snake_case, hence the local
+    ``invalid-name`` suppression.
     """
 
     y_T: Trajectory
