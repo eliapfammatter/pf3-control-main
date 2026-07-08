@@ -9,6 +9,14 @@ All shared state in this project is passed explicitly via these dataclasses
 rather than through global variables, per the project's architecture rules.
 """
 
+# pylint: disable=invalid-name
+# Field names such as `y_T`, `N_T`, `N_P`, `H_T`, `Q_T`, `H_P1`, `H_P2` follow
+# the domain-standard hydraulic/electrical engineering notation used
+# throughout the PF3 documentation and control literature (e.g. guide vane
+# opening `y_T`, rotational speed `N`, head `H`, flow `Q`). Renaming them to
+# satisfy pylint's default snake_case regex would break the required
+# functional interface and reduce readability for domain experts.
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
