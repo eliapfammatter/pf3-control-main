@@ -1,46 +1,43 @@
-import numpy as np
-from generated.constraint_based.data_types import ModelInputs, TrajectorySet, Trajectory
+from controllers import ControllerState
 from fpoints_controller import FPointsController
+from helpers.fpoints import FPoints
 
 
-def make_traj(values):
-    times = np.array([0.0, 1.0, 2.0])
-    return Trajectory(times=times, values=np.array(values))
+def make_controller(values=(100.0, 200.0, 300.0)):
+    fpoints = FPoints.from_arrays(time=[0.0, 1.0, 2.0], values=list(values))
+    fpoints.filepath = "data/pf3/REGP"
+    return FPointsController(fpoints)
 
 
-def test_call_interpolates_trajectories():
-    traj_set = TrajectorySet(
-        y_T=make_traj([0.0, 0.5, 1.0]),
-        N_T=make_traj([100.0, 200.0, 300.0]),
-        H_ref=make_traj([1.0, 2.0, 3.0]),
-        N_P=make_traj([50.0, 60.0, 70.0]),
+def make_state(**overrides):
+    defaults = dict(
+        H_T=0.0, H_P1=0.0, H_P2=0.0, N_T=0.0, y_T=0.0,
+        N_P=0.0, Q_T=0.0, Q_P1=0.0, Q_P2=0.0, H_tank=0.0,
     )
-    controller = FPointsController(traj_set)
-    inputs = controller(1.0, None)
-    assert isinstance(inputs, ModelInputs)
-    assert inputs.y_T == 0.5
-    assert inputs.N_T == 200.0
-    assert inputs.N_P == 60.0
+    defaults.update(overrides)
+    return ControllerState(**defaults)
 
 
-def test_n_p_defaults_to_zero_when_missing():
-    traj_set = TrajectorySet(
-        y_T=make_traj([0.0, 0.5, 1.0]),
-        N_T=make_traj([100.0, 200.0, 300.0]),
-        H_ref=make_traj([1.0, 2.0, 3.0]),
-        N_P=None,
+def test_compute_pump_speed_interpolates_between_sample_points():
+    controller = make_controller(values=(100.0, 200.0, 300.0))
+    assert controller.compute_pump_speed(0.5, make_state()) == 150.0
+
+
+def test_compute_pump_speed_ignores_state():
+    controller = make_controller(values=(100.0, 200.0, 300.0))
+    state_a = make_state(N_T=10.0)
+    state_b = make_state(N_T=999.0)
+    assert (
+        controller.compute_pump_speed(0.5, state_a)
+        == controller.compute_pump_speed(0.5, state_b)
     )
-    controller = FPointsController(traj_set)
-    inputs = controller(1.0, None)
-    assert inputs.N_P == 0.0
 
 
 def test_reset_is_noop():
-    traj_set = TrajectorySet(
-        y_T=make_traj([0.0, 0.5, 1.0]),
-        N_T=make_traj([100.0, 200.0, 300.0]),
-        H_ref=make_traj([1.0, 2.0, 3.0]),
-        N_P=None,
-    )
-    controller = FPointsController(traj_set)
-    controller.reset()  # should not raise
+    controller = make_controller()
+    controller.reset()  
+
+
+def test_name_includes_file_name():
+    controller = make_controller()
+    assert controller.name == "FPOINTS (REGP)"
