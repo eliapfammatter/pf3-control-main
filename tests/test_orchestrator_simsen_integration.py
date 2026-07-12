@@ -17,12 +17,16 @@ fmpy = pytest.importorskip("fmpy")
 from fmpy import extract, read_model_description
 from fmpy.fmi2 import FMU2Slave
 
-FMU_PATH = Path("data/pf3/PF3_FMI.fmu")
+REPO_ROOT = Path(__file__).resolve().parent.parent
+FMU_PATH = REPO_ROOT / "data/pf3/PF3_FMI.fmu"
 
-pytestmark = pytest.mark.skipif(
-    not FMU_PATH.exists() or not os.environ.get("RFMI_SERVER_SIMSEN"),
-    reason="requires data/pf3/PF3_FMI.fmu and RFMI_SERVER_SIMSEN set",
-)
+_missing = []
+if not FMU_PATH.exists():
+    _missing.append(f"FMU not found at {FMU_PATH}")
+if not os.environ.get("RFMI_SERVER_SIMSEN"):
+    _missing.append("RFMI_SERVER_SIMSEN is not set")
+
+pytestmark = pytest.mark.skipif(bool(_missing), reason="; ".join(_missing))
 
 INPUT_NAMES = ["PUMP1-N", "PUMP2-N", "TURB-N", "TURB-y"]
 N_P_INIT = -313.2579
