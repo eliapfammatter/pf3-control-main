@@ -8,7 +8,14 @@ time, independent of the plant's current state.
 
 from __future__ import annotations
 
-from src.generated.zero_shot.data_types import ModelInputs, ModelState, TrajectorySet
+# pylint: disable=import-error,relative-beyond-top-level
+# This module is part of the `generated.zero_shot` package and shares its
+# data structures with the sibling `data_types` module via a same-package
+# relative import (single dot). When this file is linted in isolation
+# (outside of the package tree), static resolution of that import is a
+# known false positive; at runtime, within the package, it resolves
+# correctly.
+from .data_types import ModelInputs, ModelState, TrajectorySet
 
 
 class FPointsController:
