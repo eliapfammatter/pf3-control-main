@@ -189,14 +189,15 @@ def run_simulation(
     plant.reset()
     input_fn.reset()
 
+    n_steps = round((t_end - t_start) / dt)
+
     history: list[ModelState] = []
     state: ModelState | None = None
-    t = t_start
-    while t < t_end:
+    for i in range(n_steps):
+        t = t_start + i * dt
         inputs = input_fn(t, state)
         outputs = plant.step(t, dt, inputs)
         state = ModelState(t=t, inputs=inputs, outputs=outputs)
         history.append(state)
-        t += dt
 
     return _history_to_artefact(history)
