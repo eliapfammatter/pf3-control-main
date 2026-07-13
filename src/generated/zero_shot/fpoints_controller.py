@@ -8,7 +8,7 @@ time, independent of the plant's current state.
 
 from __future__ import annotations
 
-from .data_types import ModelInputs, ModelState, TrajectorySet
+from src.generated.zero_shot.data_types import ModelInputs, ModelState, TrajectorySet
 
 
 class FPointsController:
