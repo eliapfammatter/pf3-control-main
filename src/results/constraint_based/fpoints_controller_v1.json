@@ -1,0 +1,64 @@
+{
+  "target": "src/generated/constraint_based/fpoints_controller.py",
+  "num_files": 1,
+  "modules": {
+    "src/generated/constraint_based/fpoints_controller.py": {
+      "mean_cc": 1.33,
+      "max_cc": 2,
+      "num_blocks": 9,
+      "halstead_volume": 4.75,
+      "lloc": 20,
+      "sloc": 18,
+      "comment_ratio": 0.222
+    }
+  },
+  "pylint": {
+    "score": 6.43,
+    "violations": {
+      "relative-beyond-top-level": 1
+    }
+  },
+  "checks": [
+    {
+      "metric": "mean_cc",
+      "scope": "src/generated/constraint_based/fpoints_controller.py",
+      "value": 1.33,
+      "limit": 5.0,
+      "kind": "fail",
+      "passed": true
+    },
+    {
+      "metric": "max_cc",
+      "scope": "src/generated/constraint_based/fpoints_controller.py",
+      "value": 2,
+      "limit": 10.0,
+      "kind": "fail",
+      "passed": true
+    },
+    {
+      "metric": "halstead_volume",
+      "scope": "src/generated/constraint_based/fpoints_controller.py",
+      "value": 4.75,
+      "limit": 8000.0,
+      "kind": "warn",
+      "passed": true
+    },
+    {
+      "metric": "lloc",
+      "scope": "src/generated/constraint_based/fpoints_controller.py",
+      "value": 20,
+      "limit": 500.0,
+      "kind": "warn",
+      "passed": true
+    },
+    {
+      "metric": "pylint_score",
+      "scope": "project",
+      "value": 6.43,
+      "limit": 7.0,
+      "kind": "fail",
+      "passed": false
+    }
+  ],
+  "passed": false
+}
