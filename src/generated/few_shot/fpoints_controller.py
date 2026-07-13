@@ -6,8 +6,15 @@ Interpolates pre-recorded pump speed and guide-vane trajectories
 No state feedback is used.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 
+# pylint: disable=import-error
+# This module is imported via the top-level `src` package (e.g.
+# `src.generated.few_shot.fpoints_controller`), under which this absolute
+# import resolves at runtime. When linted in isolation, outside of that
+# package context, pylint cannot resolve `src` and flags a false positive.
 from src.generated.few_shot.data_types import ModelInputs, ModelState, TrajectorySet
 
 
@@ -46,4 +53,3 @@ class FPointsController:
 
     def reset(self) -> None:
         """No internal state to reset for open-loop controller."""
-        pass
