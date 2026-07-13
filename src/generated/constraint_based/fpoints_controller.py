@@ -13,6 +13,13 @@ from __future__ import annotations
 # notation mandated by the module contract rather than PEP 8 snake_case.
 # pylint: disable=invalid-name
 
+# pylint: disable=import-error,relative-beyond-top-level
+# This module is part of the `generated.constraint_based` package and
+# shares its data structures with the sibling `data_types` module via a
+# same-package relative import (single dot). When this file is linted in
+# isolation (outside of the package tree), static resolution of that
+# import is a known false positive; at runtime, within the package, it
+# resolves correctly.
 from .data_types import ModelInputs, ModelState, TrajectorySet
 
 # Named constants (no magic numbers)
