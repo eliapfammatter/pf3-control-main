@@ -114,7 +114,7 @@ def _build_metadata() -> dict[str, Any]:
     }
 
 
-def _validate_time_span(*, t_span: tuple[float, float], dt: float) -> None:
+def _validate_time_span(t_span: tuple[float, float], dt: float) -> None:
     """Validate the simulation time span and step size.
 
     Parameters
@@ -136,7 +136,7 @@ def _validate_time_span(*, t_span: tuple[float, float], dt: float) -> None:
         raise ValueError("t_span end must be strictly greater than its start")
 
 
-def _step_count(*, t_span: tuple[float, float], dt: float) -> int:
+def _step_count(t_span: tuple[float, float], dt: float) -> int:
     """Compute the number of simulation steps covering ``t_span``.
 
     Parameters
@@ -156,7 +156,7 @@ def _step_count(*, t_span: tuple[float, float], dt: float) -> int:
 
 
 def _run_loop(
-    *, plant: Plant, input_fn: InputFn, t_span: tuple[float, float], dt: float
+    plant: Plant, input_fn: InputFn, t_span: tuple[float, float], dt: float
 ) -> list[ModelState]:
     """Drive ``plant`` with ``input_fn`` over ``t_span`` and record states.
 
@@ -180,7 +180,7 @@ def _run_loop(
     t_start, _ = t_span
     history: list[ModelState] = []
     state: ModelState | None = None
-    for i in range(_step_count(t_span=t_span, dt=dt)):
+    for i in range(_step_count(t_span, dt)):
         t = t_start + i * dt
         inputs = input_fn(t, state)
         outputs = plant.step(t, dt, inputs)
@@ -189,7 +189,7 @@ def _run_loop(
     return history
 
 
-def _stack_field(*, history: list[ModelState], attr: str, field_name: str) -> np.ndarray:
+def _stack_field(history: list[ModelState], attr: str, field_name: str) -> np.ndarray:
     """Stack a single dataclass field across the recorded state history.
 
     Parameters
@@ -210,7 +210,7 @@ def _stack_field(*, history: list[ModelState], attr: str, field_name: str) -> np
     return np.array([getattr(getattr(s, attr), field_name) for s in history])
 
 
-def _pack_signals(*, history: list[ModelState], attr: str) -> dict[str, np.ndarray]:
+def _pack_signals(history: list[ModelState], attr: str) -> dict[str, np.ndarray]:
     """Pack every dataclass field of ``attr`` across history into arrays.
 
     Parameters
@@ -227,9 +227,7 @@ def _pack_signals(*, history: list[ModelState], attr: str) -> dict[str, np.ndarr
         Recorded signals keyed by dataclass field name.
     """
     field_names = getattr(history[0], attr).__dataclass_fields__
-    return {
-        name: _stack_field(history=history, attr=attr, field_name=name) for name in field_names
-    }
+    return {name: _stack_field(history, attr, name) for name in field_names}
 
 
 def _history_to_artefact(history: list[ModelState]) -> Artefact:
@@ -248,14 +246,14 @@ def _history_to_artefact(history: list[ModelState]) -> Artefact:
     t = np.array([s.t for s in history])
     return Artefact(
         t=t,
-        inputs=_pack_signals(history=history, attr="inputs"),
-        outputs=_pack_signals(history=history, attr="outputs"),
+        inputs=_pack_signals(history, "inputs"),
+        outputs=_pack_signals(history, "outputs"),
         metadata=_build_metadata(),
     )
 
 
 def run_simulation(
-    plant: Plant, input_fn: InputFn, *, t_span: tuple[float, float], dt: float
+    plant: Plant, input_fn: InputFn, t_span: tuple[float, float], dt: float
 ) -> Artefact:
     """Run a closed-loop simulation over ``t_span`` and record the results.
 
@@ -280,8 +278,8 @@ def run_simulation(
     ValueError
         If ``dt`` is not strictly positive or ``t_span`` is not increasing.
     """
-    _validate_time_span(t_span=t_span, dt=dt)
+    _validate_time_span(t_span, dt)
     plant.reset()
     input_fn.reset()
-    history = _run_loop(plant=plant, input_fn=input_fn, t_span=t_span, dt=dt)
+    history = _run_loop(plant, input_fn, t_span, dt)
     return _history_to_artefact(history)
