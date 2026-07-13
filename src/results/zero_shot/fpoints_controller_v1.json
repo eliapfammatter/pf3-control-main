@@ -1,0 +1,64 @@
+{
+  "target": "src/generated/zero_shot/fpoints_controller.py",
+  "num_files": 1,
+  "modules": {
+    "src/generated/zero_shot/fpoints_controller.py": {
+      "mean_cc": 1.43,
+      "max_cc": 2,
+      "num_blocks": 7,
+      "halstead_volume": 4.75,
+      "lloc": 14,
+      "sloc": 13,
+      "comment_ratio": 0.0
+    }
+  },
+  "pylint": {
+    "score": 4.44,
+    "violations": {
+      "relative-beyond-top-level": 1
+    }
+  },
+  "checks": [
+    {
+      "metric": "mean_cc",
+      "scope": "src/generated/zero_shot/fpoints_controller.py",
+      "value": 1.43,
+      "limit": 5.0,
+      "kind": "fail",
+      "passed": true
+    },
+    {
+      "metric": "max_cc",
+      "scope": "src/generated/zero_shot/fpoints_controller.py",
+      "value": 2,
+      "limit": 10.0,
+      "kind": "fail",
+      "passed": true
+    },
+    {
+      "metric": "halstead_volume",
+      "scope": "src/generated/zero_shot/fpoints_controller.py",
+      "value": 4.75,
+      "limit": 8000.0,
+      "kind": "warn",
+      "passed": true
+    },
+    {
+      "metric": "lloc",
+      "scope": "src/generated/zero_shot/fpoints_controller.py",
+      "value": 14,
+      "limit": 500.0,
+      "kind": "warn",
+      "passed": true
+    },
+    {
+      "metric": "pylint_score",
+      "scope": "project",
+      "value": 4.44,
+      "limit": 7.0,
+      "kind": "fail",
+      "passed": false
+    }
+  ],
+  "passed": false
+}
