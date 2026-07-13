@@ -11,7 +11,7 @@ import numpy as np
 import pytest
 
 from src.generated.zero_shot.data_types import ModelInputs, ModelOutputs
-from src.generated.zero_shot.orchestrator import run_simulation
+from src.generated.constraint_based.orchestrator import run_simulation
 
 fmpy = pytest.importorskip("fmpy")
 from fmpy import extract, read_model_description
