@@ -1,0 +1,64 @@
+{
+  "target": "src/generated/chain_of_thoughts/orchestrator.py",
+  "num_files": 1,
+  "modules": {
+    "src/generated/chain_of_thoughts/orchestrator.py": {
+      "mean_cc": 1.47,
+      "max_cc": 3,
+      "num_blocks": 19,
+      "halstead_volume": 90.76,
+      "lloc": 76,
+      "sloc": 73,
+      "comment_ratio": 0.014
+    }
+  },
+  "pylint": {
+    "score": 9.11,
+    "violations": {
+      "relative-beyond-top-level": 1
+    }
+  },
+  "checks": [
+    {
+      "metric": "mean_cc",
+      "scope": "src/generated/chain_of_thoughts/orchestrator.py",
+      "value": 1.47,
+      "limit": 5.0,
+      "kind": "fail",
+      "passed": true
+    },
+    {
+      "metric": "max_cc",
+      "scope": "src/generated/chain_of_thoughts/orchestrator.py",
+      "value": 3,
+      "limit": 10.0,
+      "kind": "fail",
+      "passed": true
+    },
+    {
+      "metric": "halstead_volume",
+      "scope": "src/generated/chain_of_thoughts/orchestrator.py",
+      "value": 90.76,
+      "limit": 8000.0,
+      "kind": "warn",
+      "passed": true
+    },
+    {
+      "metric": "lloc",
+      "scope": "src/generated/chain_of_thoughts/orchestrator.py",
+      "value": 76,
+      "limit": 500.0,
+      "kind": "warn",
+      "passed": true
+    },
+    {
+      "metric": "pylint_score",
+      "scope": "project",
+      "value": 9.11,
+      "limit": 7.0,
+      "kind": "fail",
+      "passed": true
+    }
+  ],
+  "passed": true
+}
