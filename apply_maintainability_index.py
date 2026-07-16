@@ -38,6 +38,7 @@ FINAL_VERSIONS = [
     ("constraint_based", "orchestrator", 1),
     ("chain_of_thoughts", "data_types", 2),
     ("chain_of_thoughts", "orchestrator", 1),
+    ("chain_of_thoughts", "fpoints_controller", 1),
 ]
 
 
