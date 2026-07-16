@@ -9,7 +9,9 @@
       "halstead_volume": 12.0,
       "lloc": 67,
       "sloc": 38,
-      "comment_ratio": 0.132
+      "comment_ratio": 0.132,
+      "maintainability_index": 47.92,
+      "mi_rank": "A"
     }
   },
   "pylint": {
@@ -58,5 +60,6 @@
       "passed": true
     }
   ],
-  "passed": true
+  "passed": true,
+  "notes": "maintainability_index / mi_rank added retroactively (descriptive only, not part of the FAIL/WARN threshold checks or the 'passed' verdict) via apply_maintainability_index.py"
 }

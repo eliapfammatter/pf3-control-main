@@ -10,6 +10,15 @@ thresholds defined in Section 4.1 of the methodology:
     - Logical Lines of Code (LLOC) Radon raw   <= 500 / module        (WARN)
     - Pylint score                 Pylint      >= 7.0 / 10            (FAIL)
 
+In addition, the pipeline reports Radon's Maintainability Index (MI) per
+module as a purely descriptive, secondary metric. MI is a single 0-100
+composite score derived from Halstead Volume, Cyclomatic Complexity, LLOC and
+comment density (Oman & Hagemeister, 1992; implemented by Radon). It is not
+compared against a threshold and does not affect the FAIL/PASS verdict: it is
+only intended to give a continuous, more fine-grained view of module quality
+where the four primary threshold checks saturate (e.g. small modules that all
+trivially satisfy the CC/Halstead/LLOC limits).
+
 It prints a human-readable text report and can optionally write a JSON report.
 The process exits with code 0 if all FAIL thresholds are met and 1 otherwise,
 so it can be used directly in the prompting feedback loop.
@@ -133,6 +142,23 @@ def analyse_raw(target: Path) -> dict[str, dict]:
     return out
 
 
+def analyse_mi(target: Path) -> dict[str, dict]:
+    """Compute per-module Maintainability Index (MI) via Radon.
+
+    MI is descriptive only: it is reported alongside the four primary
+    metrics but is not evaluated against a threshold (see module docstring).
+    """
+    raw = run_tool(["-m", "radon", "mi", "-j", str(target)])
+    data = json.loads(raw) if raw.strip() else {}
+    out: dict[str, dict] = {}
+    for module, report in data.items():
+        out[module] = {
+            "maintainability_index": round(float(report.get("mi", 0.0)), 2),
+            "mi_rank": report.get("rank", "?"),
+        }
+    return out
+
+
 def analyse_pylint(files: list[Path]) -> dict:
     """Run Pylint once over all files and return score plus violation summary."""
     if not files:
@@ -207,9 +233,10 @@ def build_report(target: Path) -> dict:
     cc = analyse_cc(target)
     hal = analyse_halstead(target)
     raw = analyse_raw(target)
+    mi = analyse_mi(target)
 
     modules: dict[str, dict] = {}
-    for module in sorted(set(cc) | set(hal) | set(raw)):
+    for module in sorted(set(cc) | set(hal) | set(raw) | set(mi)):
         modules[module] = {
             "mean_cc": cc.get(module, {}).get("mean_cc", 0.0),
             "max_cc": cc.get(module, {}).get("max_cc", 0),
@@ -218,6 +245,9 @@ def build_report(target: Path) -> dict:
             "lloc": raw.get(module, {}).get("lloc", 0),
             "sloc": raw.get(module, {}).get("sloc", 0),
             "comment_ratio": raw.get(module, {}).get("comment_ratio", 0.0),
+            # Descriptive only - not part of the FAIL/WARN threshold checks.
+            "maintainability_index": mi.get(module, {}).get("maintainability_index", 0.0),
+            "mi_rank": mi.get(module, {}).get("mi_rank", "?"),
         }
 
     report = {
@@ -241,7 +271,10 @@ def print_text_report(report: dict) -> None:
     print(f"  files analysed: {report['num_files']}")
     print(line)
 
-    header = f"{'Module':<42}{'meanCC':>7}{'maxCC':>6}{'Halstead':>10}{'LLOC':>6}"
+    header = (
+        f"{'Module':<42}{'meanCC':>7}{'maxCC':>6}{'Halstead':>10}{'LLOC':>6}"
+        f"{'MI':>7}{'Rank':>5}"
+    )
     print(header)
     print("-" * 72)
     for module, m in report["modules"].items():
@@ -249,7 +282,9 @@ def print_text_report(report: dict) -> None:
         print(
             f"{name:<42}{m['mean_cc']:>7}{m['max_cc']:>6}"
             f"{m['halstead_volume']:>10}{m['lloc']:>6}"
+            f"{m['maintainability_index']:>7}{m['mi_rank']:>5}"
         )
+    print("(MI = Maintainability Index, descriptive only, no threshold applied)")
 
     print("-" * 72)
     pl = report["pylint"]
