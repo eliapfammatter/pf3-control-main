@@ -6,6 +6,12 @@ inputs/outputs/state, trajectory sampling helpers, and the artefact
 produced at the end of a simulation run.
 """
 
+# Field names such as ``y_T``, ``N_T``, ``H_P1`` intentionally mirror the
+# domain-standard hydraulic/electrical notation used throughout the PF3
+# rig documentation and SIMSEN FMU interface, so they are exempted from
+# pylint's snake_case naming convention.
+# pylint: disable=invalid-name
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
