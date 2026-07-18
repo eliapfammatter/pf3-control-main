@@ -1,15 +1,15 @@
-"""Quick check: does generated/zero_shot/data_types.py work with real SIMSEN output?
+"""Quick check: does src/data_types.py work with real SIMSEN output?
 
 Connects to the running SIMSEN FMU (same way run_fmi_control.py does), takes one
 simulation step with fixed inputs, and wraps the raw FMU values into the
-generated ModelInputs / ModelOutputs dataclasses. If this runs with no errors
+ModelInputs / ModelOutputs dataclasses. If this runs with no errors
 and prints sane numbers, the data_types module is compatible with SIMSEN's
 FMU interface.
 
 Run from the repo root (pf3-control-main), with your venv active and
 RFMI_SERVER_SIMSEN set:
 
-    python check_data_types_simsen.py
+    python tests/test_data_types_integration.py
 """
 
 import sys
@@ -18,9 +18,7 @@ from pathlib import Path
 from fmpy import extract, read_model_description
 from fmpy.fmi2 import FMU2Slave
 
-# Make the generated zero-shot module importable.
-sys.path.insert(0, str(Path("generated/zero_shot").resolve()))
-from src.generated.zero_shot.data_types import ModelInputs, ModelOutputs  
+from src.data_types import ModelInputs, ModelOutputs
 
 FMU_PATH = Path("data/pf3/PF3_FMI.fmu")
 
