@@ -100,30 +100,25 @@ class Trajectory:
     Raises
     ------
     ValueError
-        If `times` and `values` do not have matching, sufficient length.
+        On construction, if `times` and `values` have different lengths.
+        On call, if there are fewer than `MIN_TRAJECTORY_POINTS` samples.
     """
 
     times: np.ndarray
     values: np.ndarray
 
     def __post_init__(self) -> None:
-        """Validate that `times` and `values` are consistent.
+        """Validate that `times` and `values` have matching shapes.
 
         Raises
         ------
         ValueError
-            If `times` and `values` have different lengths, or if either
-            has fewer than `MIN_TRAJECTORY_POINTS` samples.
+            If `times` and `values` have different lengths.
         """
         if len(self.times) != len(self.values):
             raise ValueError(
                 "Trajectory 'times' and 'values' must have equal length: "
                 f"got {len(self.times)} and {len(self.values)}."
-            )
-        if len(self.times) < MIN_TRAJECTORY_POINTS:
-            raise ValueError(
-                "Trajectory requires at least "
-                f"{MIN_TRAJECTORY_POINTS} samples, got {len(self.times)}."
             )
 
     def __call__(self, t: float) -> float:
@@ -139,7 +134,18 @@ class Trajectory:
         -------
         float
             Interpolated value at time `t`.
+
+        Raises
+        ------
+        ValueError
+            If the trajectory has fewer than `MIN_TRAJECTORY_POINTS`
+            samples to interpolate from.
         """
+        if len(self.times) < MIN_TRAJECTORY_POINTS:
+            raise ValueError(
+                "Trajectory requires at least "
+                f"{MIN_TRAJECTORY_POINTS} samples, got {len(self.times)}."
+            )
         return float(np.interp(t, self.times, self.values))
 
 
