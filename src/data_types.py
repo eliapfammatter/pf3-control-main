@@ -1,34 +1,21 @@
-"""
-PF3 Core Data Types.
+"""Shared data structures for the PF3 hydropower simulation software.
 
-Defines the shared dataclasses that flow between the ``Plant`` and
-``InputFn`` protocols and the ``run_simulation`` orchestrator:
-
-- ModelInputs: plant excitation signals at a single instant.
-- ModelOutputs: plant response signals at a single instant.
-- ModelState: full instantaneous state (time, inputs, outputs).
-- Trajectory: a time series with linear-interpolation lookup.
-- TrajectorySet: the trajectories needed to drive a simulation.
-- Artefact: the recorded result of a full simulation run.
-
-All physical quantities are expressed in SI units unless noted otherwise.
+This module defines the dataclasses that flow between the ``Plant`` and
+``InputFn`` protocols and the ``run_simulation`` orchestrator: model
+inputs/outputs/state, trajectory sampling helpers, and the artefact
+produced at the end of a simulation run.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
 
 import numpy as np
-
-# Number of points required for np.interp to produce a meaningful
-# interpolation (fewer points make a trajectory lookup ill-defined).
-MIN_TRAJECTORY_POINTS = 2
 
 
 @dataclass
 class ModelInputs:
-    """Instantaneous plant inputs.
+    """Inputs applied to the plant at a given simulation step.
 
     Parameters
     ----------
@@ -47,7 +34,7 @@ class ModelInputs:
 
 @dataclass
 class ModelOutputs:
-    """Instantaneous plant outputs.
+    """Outputs produced by the plant at a given simulation step.
 
     Parameters
     ----------
@@ -69,16 +56,16 @@ class ModelOutputs:
 
 @dataclass
 class ModelState:
-    """Full instantaneous state of a simulated plant.
+    """Snapshot of the plant state at a given simulation time.
 
     Parameters
     ----------
     t : float
         Simulation time [s].
     inputs : ModelInputs
-        Plant inputs at time `t`.
+        Inputs applied at time ``t``.
     outputs : ModelOutputs
-        Plant outputs at time `t`.
+        Outputs produced at time ``t``.
     """
 
     t: float
@@ -88,38 +75,22 @@ class ModelState:
 
 @dataclass
 class Trajectory:
-    """A time series with linear-interpolation lookup.
+    """A sampled time series that can be evaluated at arbitrary times.
+
+    Values outside the sampled time range are clamped to the first or
+    last sample, matching the default boundary behaviour of
+    ``numpy.interp``.
 
     Parameters
     ----------
-    times : np.ndarray
-        Strictly increasing sample times [s].
-    values : np.ndarray
-        Sample values, same length as `times`.
-
-    Raises
-    ------
-    ValueError
-        On construction, if `times` and `values` have different lengths.
-        On call, if there are fewer than `MIN_TRAJECTORY_POINTS` samples.
+    times : numpy.ndarray
+        Sample times [s], expected to be sorted in ascending order.
+    values : numpy.ndarray
+        Sample values, one per entry in `times`.
     """
 
     times: np.ndarray
     values: np.ndarray
-
-    def __post_init__(self) -> None:
-        """Validate that `times` and `values` have matching shapes.
-
-        Raises
-        ------
-        ValueError
-            If `times` and `values` have different lengths.
-        """
-        if len(self.times) != len(self.values):
-            raise ValueError(
-                "Trajectory 'times' and 'values' must have equal length: "
-                f"got {len(self.times)} and {len(self.values)}."
-            )
 
     def __call__(self, t: float) -> float:
         """Evaluate the trajectory at time `t` by linear interpolation.
@@ -127,31 +98,27 @@ class Trajectory:
         Parameters
         ----------
         t : float
-            Query time [s]. Values outside the sampled range are clamped
-            to the first/last sample (standard `np.interp` behaviour).
+            Time at which to evaluate the trajectory [s].
 
         Returns
         -------
         float
-            Interpolated value at time `t`.
+            Interpolated value at time `t`, clamped to the sample
+            range boundaries if `t` falls outside it.
 
         Raises
         ------
         ValueError
-            If the trajectory has fewer than `MIN_TRAJECTORY_POINTS`
-            samples to interpolate from.
+            If the trajectory has no samples.
         """
-        if len(self.times) < MIN_TRAJECTORY_POINTS:
-            raise ValueError(
-                "Trajectory requires at least "
-                f"{MIN_TRAJECTORY_POINTS} samples, got {len(self.times)}."
-            )
+        if self.times.size == 0 or self.values.size == 0:
+            raise ValueError("Trajectory has no samples to interpolate.")
         return float(np.interp(t, self.times, self.values))
 
 
 @dataclass
 class TrajectorySet:
-    """The set of trajectories needed to drive a simulation.
+    """Collection of reference trajectories driving a simulation run.
 
     Parameters
     ----------
@@ -161,7 +128,7 @@ class TrajectorySet:
         Turbine speed reference trajectory [rpm].
     H_ref : Trajectory
         Head reference trajectory [m].
-    N_P : Trajectory | None, optional
+    N_P : Trajectory or None, optional
         Pump speed reference trajectory [rpm], by default None.
     """
 
@@ -173,34 +140,34 @@ class TrajectorySet:
 
 @dataclass
 class Artefact:
-    """Recorded result of a full simulation run.
+    """Result of a full simulation run produced by `run_simulation`.
 
     Notes
     -----
-    Backward compatibility: `metadata` and `predictions` are open-ended
-    dictionaries so that new fields can be added by producers/consumers
-    of this artefact without breaking the dataclass schema or requiring
-    a version bump. Existing keys in `inputs`/`outputs` should not be
-    renamed or removed once published, to keep older analysis scripts
-    working against newer artefacts.
+    For backward compatibility with earlier PF3 tooling, the
+    ``predictions`` field defaults to ``None`` rather than an empty
+    dict. Consumers written against older Artefact producers that did
+    not populate predictions should treat ``None`` and ``{}``
+    equivalently.
 
     Parameters
     ----------
-    t : np.ndarray
+    t : numpy.ndarray
         Simulation time vector [s].
-    inputs : dict[str, np.ndarray]
-        Recorded input signals, keyed by `ModelInputs` field name.
-    outputs : dict[str, np.ndarray]
-        Recorded output signals, keyed by `ModelOutputs` field name.
+    inputs : dict[str, numpy.ndarray]
+        Recorded input signals keyed by `ModelInputs` field name.
+    outputs : dict[str, numpy.ndarray]
+        Recorded output signals keyed by `ModelOutputs` field name.
     metadata : dict
-        Free-form run metadata (e.g. plant configuration, solver settings).
-    predictions : dict | None, optional
-        Optional model predictions (e.g. from an observer or controller),
-        by default None.
+        Free-form metadata about the run (e.g. plant name, solver
+        settings, git revision).
+    predictions : dict or None, optional
+        Optional model predictions keyed by signal name, by default
+        None.
     """
 
     t: np.ndarray
     inputs: dict[str, np.ndarray]
     outputs: dict[str, np.ndarray]
-    metadata: dict[str, Any] = field(default_factory=dict)
-    predictions: dict[str, Any] | None = None
+    metadata: dict = field(default_factory=dict)
+    predictions: dict | None = None
