@@ -10,9 +10,9 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from src.generated.zero_shot.data_types import ModelInputs, ModelOutputs, Trajectory, TrajectorySet
-from src.generated.zero_shot.fpoints_controller import FPointsController
-from src.generated.zero_shot.orchestrator import run_simulation
+from src.data_types import ModelInputs, ModelOutputs, Trajectory, TrajectorySet
+from src.fpoints_controller import FPointsController
+from src.orchestrator import run_simulation
 
 fmpy = pytest.importorskip("fmpy")
 from fmpy import extract, read_model_description

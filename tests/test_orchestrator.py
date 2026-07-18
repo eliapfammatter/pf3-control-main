@@ -1,8 +1,8 @@
 import typing
 
 import numpy as np
-from generated.constraint_based.data_types import ModelInputs, ModelOutputs
-from generated.zero_shot.orchestrator import Plant, InputFn, run_simulation
+from src.data_types import ModelInputs, ModelOutputs
+from src.orchestrator import Plant, InputFn, run_simulation
 
 
 class DummyPlant:

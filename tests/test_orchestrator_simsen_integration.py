@@ -10,8 +10,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from src.generated.zero_shot.data_types import ModelInputs, ModelOutputs
-from src.generated.few_shot.orchestrator import run_simulation
+from src.data_types import ModelInputs, ModelOutputs
+from src.orchestrator import run_simulation
 
 fmpy = pytest.importorskip("fmpy")
 from fmpy import extract, read_model_description
