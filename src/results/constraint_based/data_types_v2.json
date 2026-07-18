@@ -1,0 +1,66 @@
+{
+  "target": "src/data_types.py",
+  "num_files": 1,
+  "modules": {
+    "src/data_types.py": {
+      "mean_cc": 1.88,
+      "max_cc": 4,
+      "num_blocks": 8,
+      "halstead_volume": 49.83,
+      "lloc": 69,
+      "sloc": 40,
+      "comment_ratio": 0.125,
+      "maintainability_index": 41.67,
+      "mi_rank": "A"
+    }
+  },
+  "pylint": {
+    "score": 9.71,
+    "violations": {
+      "missing-final-newline": 1
+    }
+  },
+  "checks": [
+    {
+      "metric": "mean_cc",
+      "scope": "src/data_types.py",
+      "value": 1.88,
+      "limit": 5.0,
+      "kind": "fail",
+      "passed": true
+    },
+    {
+      "metric": "max_cc",
+      "scope": "src/data_types.py",
+      "value": 4,
+      "limit": 10.0,
+      "kind": "fail",
+      "passed": true
+    },
+    {
+      "metric": "halstead_volume",
+      "scope": "src/data_types.py",
+      "value": 49.83,
+      "limit": 8000.0,
+      "kind": "warn",
+      "passed": true
+    },
+    {
+      "metric": "lloc",
+      "scope": "src/data_types.py",
+      "value": 69,
+      "limit": 500.0,
+      "kind": "warn",
+      "passed": true
+    },
+    {
+      "metric": "pylint_score",
+      "scope": "project",
+      "value": 9.71,
+      "limit": 7.0,
+      "kind": "fail",
+      "passed": true
+    }
+  ],
+  "passed": true
+}
