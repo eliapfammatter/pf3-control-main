@@ -10,7 +10,7 @@ returned as ``ModelInputs``. No feedback from the plant state is used.
 
 from __future__ import annotations
 
-from src.data_types import ModelInputs, ModelState, TrajectorySet
+from src.data_types import ModelInputs, ModelState, TrajectorySet  # pylint: disable=import-error
 
 
 class FPointsController:
