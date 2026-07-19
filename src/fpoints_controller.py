@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from src.data_types import ModelInputs, ModelState, TrajectorySet
+from src.data_types import ModelInputs, ModelState, TrajectorySet  # pylint: disable=import-error
 
 
 @dataclass
