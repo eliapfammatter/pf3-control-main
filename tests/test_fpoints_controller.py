@@ -1,7 +1,7 @@
 import numpy as np
 
-from data_types import ModelInputs, ModelOutputs, ModelState, Trajectory, TrajectorySet
-from fpoints_controller import FPointsController
+from src.data_types import ModelInputs, ModelOutputs, ModelState, Trajectory, TrajectorySet
+from src.fpoints_controller import FPointsController
 
 
 def make_trajectory_set(n_p_values=(100.0, 200.0, 300.0)):
