@@ -15,7 +15,7 @@ track.
 
 from __future__ import annotations
 
-from src.data_types import ModelInputs, ModelState, TrajectorySet  # pylint: disable=import-error
+from data_types import ModelInputs, ModelState, TrajectorySet
 
 DEFAULT_PUMP_SPEED = 0.0
 
