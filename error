@@ -1,0 +1,51 @@
+(venv) silab1@localhost:~/Desktop/pf3-control-main> PYTHONPATH=src pytest tests/test_data_types.py -v
+============================================================================== test session starts ==============================================================================
+platform linux -- Python 3.13.13, pytest-9.1.1, pluggy-1.6.0 -- /home/silab1/Desktop/pf3-control-main/venv/bin/python3.13
+cachedir: .pytest_cache
+rootdir: /home/silab1/Desktop/pf3-control-main
+collected 3 items                                                                                                                                                               
+
+tests/test_data_types.py::test_trajectory_interpolates_linearly PASSED                                                                                                    [ 33%]
+tests/test_data_types.py::test_trajectory_clamps_outside_sample_range PASSED                                                                                              [ 66%]
+tests/test_data_types.py::test_trajectory_raises_on_empty_samples FAILED                                                                                                  [100%]
+
+=================================================================================== FAILURES ====================================================================================
+____________________________________________________________________ test_trajectory_raises_on_empty_samples ____________________________________________________________________
+
+    def test_trajectory_raises_on_empty_samples():
+>       traj = Trajectory(times=np.array([]), values=np.array([]))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_data_types.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:5: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Trajectory(times=array([], dtype=float64), values=array([], dtype=float64))
+
+    def __post_init__(self) -> None:
+        """Validate that `times` and `values` are consistent.
+    
+        Raises
+        ------
+        ValueError
+            If `times` and `values` have different lengths, or if either
+            has fewer than `MIN_TRAJECTORY_POINTS` samples.
+        """
+        if len(self.times) != len(self.values):
+            raise ValueError(
+                "Trajectory 'times' and 'values' must have equal length: "
+                f"got {len(self.times)} and {len(self.values)}."
+            )
+        if len(self.times) < MIN_TRAJECTORY_POINTS:
+>           raise ValueError(
+                "Trajectory requires at least "
+                f"{MIN_TRAJECTORY_POINTS} samples, got {len(self.times)}."
+            )
+E           ValueError: Trajectory requires at least 2 samples, got 0.
+
+src/data_types.py:124: ValueError
+============================================================================ short test summary info ============================================================================
+FAILED tests/test_data_types.py::test_trajectory_raises_on_empty_samples - ValueError: Trajectory requires at least 2 samples, got 0.
+========================================================================== 1 failed, 2 passed in 0.11s ==========================================================================
